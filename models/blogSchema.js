@@ -34,6 +34,18 @@ const blogSchema = new mongoose.Schema(
 			required: true,
 		},
 		// blogRelatedLinks: [{ ref: "blogRelatedLinks" }],
+		blogRelatedLinks: [
+			{
+				relatedBlogId: {
+					type: String,
+					required: true,
+				},
+				relatedBlogTitle: {
+					type: String,
+					required: true,
+				},
+			},
+		],
 	},
 	{
 		timestamps: true,
