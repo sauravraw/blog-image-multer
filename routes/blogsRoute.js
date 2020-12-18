@@ -1,7 +1,5 @@
 // Error
-const sendResponse = require("../helpers/sendResponse");
-const appError = require("../helpers/appError.js");
-const sendError = require("../helpers/sendError.js");
+const path = require("path");
 
 // File Require
 const router = require("express").Router();
@@ -15,11 +13,20 @@ const {
 
 // multer
 const multer = require("multer");
+const { response } = require("express");
 
 let storage = multer.diskStorage({
-	destination: `./images/`,
+	destination: "./images",
 	filename: function (req, file, cb) {
-		cb(null, new Date().toISOString + file.originalname);
+		cb(null, new Date().toISOString() + path.extname(file.originalname));
+	},
+});
+
+// init upload
+let upload = multer({
+	storage: storage,
+	fileFilter: function (req, file, cb) {
+		checkFileType(file, cb);
 	},
 });
 
@@ -37,19 +44,13 @@ function checkFileType(file, cb) {
 	if (mimetype && extname) {
 		return cb(null, true);
 	} else {
-		sendError(
-			401,
-			"Unsuccessful",
-			"Error: Only Image should be added",
-			req,
-			res
-		);
+		cb("Error: Images Only");
 	}
 }
 
-let upload = multer({ storage });
+router.route("/").post(upload.single("blogImage"), createBlog);
 
-router.route("/").get(getAllBlogs).post(upload.single("blogImage"), createBlog);
+router.route("/").get(getAllBlogs);
 
 router.route("/:blogId").get(getBlogById).delete(deleteBlogById);
 

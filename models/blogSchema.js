@@ -1,19 +1,8 @@
 const mongoose = require("mongoose");
 const uniqid = require("uniqid");
 
-// const blogRelatedLinksSchema = new mongoose.Schema({
-// 	title: {
-// 		type: String,
-// 	},
-// 	id: {
-// 		type: String,
-// 	},
-// });
+const relatedBlogHandler = require("../helpers/relatedBlogHandler.js");
 
-// const blogRelatedLinks = mongoose.model(
-// 	"blogRelatedLinksSchema",
-// 	blogRelatedLinksSchema
-// );
 const blogSchema = new mongoose.Schema(
 	{
 		blogId: {
@@ -39,6 +28,10 @@ const blogSchema = new mongoose.Schema(
 				relatedBlogId: {
 					type: String,
 					required: true,
+					validate: {
+						validator: relatedBlogHandler,
+						message: "Invalid Input (No related blog found.)",
+					},
 				},
 				relatedBlogTitle: {
 					type: String,

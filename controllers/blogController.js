@@ -29,15 +29,27 @@ const getBlogById = async (req, res) => {
 		let blog = await Blog.find({ blogId });
 		sendResponse(200, "Successful", blog, req, res);
 	} catch (err) {
-		sendResponse(401, "Cannot get Blog by given Id", err, req, res);
+		sendError(401, "Cannot get Blog by given Id", err, req, res);
 	}
-	// console.log(blogId);
-	// console.log(req.params);
 };
 
 const createBlog = async (req, res, next) => {
 	const { blogTitle, blogContent } = req.body;
-	let newBlog = new Blog({ blogTitle, blogContent, blogImage: req.file.path });
+	console.log(req.body);
+	console.log(req.file);
+	let blogRelatedData = JSON.parse(req.body.blogRelatedLinks);
+
+	let newBlog;
+
+	blogRelatedData.forEach(() => {
+		newBlog = new Blog({
+			blogTitle,
+			blogContent,
+			blogRelatedLinks: blogRelatedData,
+			blogImage: req.file.path,
+		});
+	});
+
 	try {
 		newBlog = await newBlog.save();
 		sendResponse(200, "Successful", newBlog, req, res);
@@ -50,7 +62,7 @@ const deleteBlogById = async (req, res) => {
 	const { blogId } = req.params;
 	try {
 		let deletedBlog = await Blog.deleteOne({ blogId });
-		sendResponse(200, "Blog Deleted Successfull", deletedBlog, req, res);
+		sendResponse(200, "Blog Deleted Successfully", deletedBlog, req, res);
 	} catch (err) {
 		sendError(400, "Blog can't be deleted...", err, req, res);
 	}
