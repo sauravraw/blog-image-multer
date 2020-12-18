@@ -1,0 +1,31 @@
+{
+  "name": "13-blog-multer-image-backend",
+  "version": "1.0.0",
+  "description": "Using multer performed this task",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/sauravraw/blog-image-multer.git"
+  },
+  "keywords": [
+    "blog-image",
+    "multer",
+    "images"
+  ],
+  "author": "Saurav",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/sauravraw/blog-image-multer/issues"
+  },
+  "homepage": "https://github.com/sauravraw/blog-image-multer#readme",
+  "dependencies": {
+    "dotenv": "^8.2.0",
+    "express": "^4.17.1",
+    "mongoose": "^5.11.8",
+    "multer": "^1.4.2",
+    "uniqid": "^5.2.0"
+  }
+}
