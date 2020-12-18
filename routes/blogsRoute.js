@@ -7,6 +7,7 @@ const {
 	getAllBlogs,
 	getBlogById,
 	createBlog,
+	updateBlogs,
 	deleteBlogById,
 	deleteByQuery,
 } = require("../controllers/blogController.js");
@@ -48,11 +49,15 @@ function checkFileType(file, cb) {
 	}
 }
 
-router.route("/").post(upload.single("blogImage"), createBlog);
+router.route("/").post(upload.single("blogImage"));
 
-router.route("/").get(getAllBlogs);
+router.route("/").get(getAllBlogs).post(createBlog);
 
-router.route("/:blogId").get(getBlogById).delete(deleteBlogById);
+router
+	.route("/:blogId")
+	.get(getBlogById)
+	.put(updateBlogs)
+	.delete(deleteBlogById);
 
 router.route("/").delete(deleteByQuery);
 module.exports = router;

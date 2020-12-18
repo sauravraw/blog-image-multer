@@ -1,9 +1,8 @@
 const sendResponse = require("../helpers/sendResponse");
-const appError = require("../helpers/appError.js");
 const sendError = require("../helpers/sendError.js");
 const Blog = require("../models/blogSchema.js");
 
-const getAllBlogs = async (req, res, next) => {
+const getAllBlogs = async (req, res) => {
 	if (req.query) {
 		let findBlog = await Blog.find(req.query);
 		if (findBlog < 1) {
@@ -33,12 +32,11 @@ const getBlogById = async (req, res) => {
 	}
 };
 
-const createBlog = async (req, res, next) => {
+const createBlog = async (req, res) => {
 	const { blogTitle, blogContent } = req.body;
+	let blogRelatedData = JSON.parse(req.body.blogRelatedLinks);
 	console.log(req.body);
 	console.log(req.file);
-	let blogRelatedData = JSON.parse(req.body.blogRelatedLinks);
-
 	let newBlog;
 
 	blogRelatedData.forEach(() => {
@@ -49,12 +47,35 @@ const createBlog = async (req, res, next) => {
 			blogImage: req.file.path,
 		});
 	});
-
 	try {
 		newBlog = await newBlog.save();
 		sendResponse(200, "Successful", newBlog, req, res);
 	} catch (err) {
 		sendError(401, "Unsuccessful", err, req, res);
+	}
+};
+
+const updateBlogs = async (req, res) => {
+	const { blogId } = req.params;
+	const re = /<("[^"]?"|'[^']?'|[^'">])*>/;
+	if (re.test(req.params.blogTitle)) {
+		sendError(400, "Unsuccessful", "Blog Title cannot be HTML", req, res);
+	} else {
+		try {
+			let blog = await Blog.updateOne(
+				{ blogId },
+				{
+					$set: {
+						blogTitle: req.body.blogTitle,
+						blogContent: req.body.blogContent,
+					},
+				},
+				{ runValidators: true }
+			);
+			sendResponse(200, "Successfull", blog, req, res);
+		} catch (err) {
+			sendError(400, "Blog can't be updated by given id", err, req, res);
+		}
 	}
 };
 
@@ -87,6 +108,7 @@ module.exports = {
 	getAllBlogs,
 	getBlogById,
 	createBlog,
+	updateBlogs,
 	deleteBlogById,
 	deleteByQuery,
 };
