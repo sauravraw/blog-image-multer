@@ -64,13 +64,13 @@ const updateBlogs = async (req, res) => {
 		sendError(400, "Unsuccessful", "Blog Title cannot be HTML", req, res);
 	} else {
 		try {
+			let update = {};
+			if (req.body.blogTitle) update.blogTitle = req.body.blogTitle;
+			if (req.body.blogContent) update.blogContent = req.body.blogContent;
 			let blog = await Blog.updateOne(
 				{ blogId },
 				{
-					$set: {
-						blogTitle: req.body.blogTitle,
-						blogContent: req.body.blogContent,
-					},
+					$set: update,
 				},
 				{ runValidators: true }
 			);

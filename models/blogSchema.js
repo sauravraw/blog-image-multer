@@ -22,7 +22,6 @@ const blogSchema = new mongoose.Schema(
 			type: String,
 			required: true,
 		},
-		// blogRelatedLinks: [{ ref: "blogRelatedLinks" }],
 		blogRelatedLinks: [
 			{
 				relatedBlogId: {
