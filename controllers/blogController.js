@@ -1,6 +1,7 @@
 const sendResponse = require("../helpers/sendResponse");
 const sendError = require("../helpers/sendError.js");
 const Blog = require("../models/blogSchema.js");
+const upload = require("../helpers/blogImageMulter.js");
 
 const getAllBlogs = async (req, res) => {
 	if (req.query) {
@@ -58,6 +59,7 @@ const createBlog = async (req, res) => {
 const updateBlogs = async (req, res) => {
 	const { blogId } = req.params;
 	const re = /<("[^"]?"|'[^']?'|[^'">])*>/;
+
 	if (re.test(req.params.blogTitle)) {
 		sendError(400, "Unsuccessful", "Blog Title cannot be HTML", req, res);
 	} else {
