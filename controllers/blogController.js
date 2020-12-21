@@ -36,8 +36,6 @@ const getBlogById = async (req, res) => {
 const createBlog = async (req, res) => {
 	const { blogTitle, blogContent } = req.body;
 	let blogRelatedData = JSON.parse(req.body.blogRelatedLinks);
-	console.log(req.body);
-	console.log(req.file);
 	let newBlog;
 
 	blogRelatedData.forEach(() => {
@@ -67,6 +65,13 @@ const updateBlogs = async (req, res) => {
 			let update = {};
 			if (req.body.blogTitle) update.blogTitle = req.body.blogTitle;
 			if (req.body.blogContent) update.blogContent = req.body.blogContent;
+			// if (req.body.blogRelatedLinks) {
+			// 	for (let key in req.body.blogRelatedLinks) {
+			// 		update["blogrelatedLink." + key] =
+			// 			req.body.blogRelatedLinks["." + key];
+			// 	}
+			// }
+			// if (req.body.blogImage) update.blogImage = req.file.blogImage;
 			let blog = await Blog.updateOne(
 				{ blogId },
 				{
@@ -74,11 +79,12 @@ const updateBlogs = async (req, res) => {
 				},
 				{ runValidators: true }
 			);
-			sendResponse(200, "Successfull", blog, req, res);
+			sendResponse(200, "Successful", blog, req, res);
 		} catch (err) {
 			sendError(400, "Blog can't be updated by given id", err, req, res);
 		}
 	}
+	console.log(req.body);
 };
 
 const deleteBlogById = async (req, res) => {
